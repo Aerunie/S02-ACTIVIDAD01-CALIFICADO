@@ -81,7 +81,6 @@ public class SchedulerIO implements Model
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(DIRECTORY, FILE)));
 			writer.write(content.toString().trim());
-			writer.newLine();
 			writer.close();
 		} catch (FileNotFoundException fnfe) {
 			notice = "File not found";
