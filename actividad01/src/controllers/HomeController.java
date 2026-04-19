@@ -4,6 +4,7 @@ import controllers.core.Controller;
 import views.EventListView;
 import views.HomeView;
 import views.NewEventView;
+import views.RemoveEventView;
 
 
 /**
@@ -17,6 +18,7 @@ public class HomeController extends Controller
 	private HomeView homeView;
 	private EventListController eventListController = new EventListController();
 	private NewEventController newEventController = new NewEventController(eventListController);
+	private RemoveEventController removeEventController = new RemoveEventController();
 	
 	
 	//-----------------------------------------------------------------------
@@ -28,6 +30,7 @@ public class HomeController extends Controller
 		// Initializes others controllers
 		eventListController.run();
 		newEventController.run();
+		removeEventController.run();
 		
 		// Initializes HomeView
 		homeView = new HomeView(this, mainFrame);
@@ -49,5 +52,9 @@ public class HomeController extends Controller
 	public NewEventView getNewEventView()
 	{
 		return newEventController.getView();
+	}
+
+	public RemoveEventView getRemoveEventView() {
+		return removeEventController.getView();
 	}
 }

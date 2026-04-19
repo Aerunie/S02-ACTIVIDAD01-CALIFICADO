@@ -111,4 +111,44 @@ public class SchedulerIO implements Model
 		
 		return response;
 	}
+
+	/**
+	 * Reads a {@link SchedulerEvent} saved in disk with name {@link #FILE}.
+	 * @return List of lists (matrix) of the events
+	 * @throws Exception If it can't read event file
+	 */
+	public Vector<Vector<Object>> getEventsForRemove() throws Exception
+	{
+		Vector<Vector<Object>> response = new Vector<Vector<Object>>();
+
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(new File(DIRECTORY, FILE)));
+			String line = reader.readLine();
+
+			while (line != null) {
+				Vector<Object> eventInfo = new Vector<Object>();
+				String[] tokens = line.split(";");
+
+				eventInfo.add(tokens[0]);
+				eventInfo.add(tokens[1]);
+				eventInfo.add(Frequency.valueOf(tokens[2]));
+				eventInfo.add(tokens[3]);
+				eventInfo.add(tokens[4].equals("1") ? "ON" : "OFF");
+				eventInfo.add(Boolean.FALSE);
+
+				response.add(eventInfo);
+				line = reader.readLine();
+			}
+
+			reader.close();
+		} catch (FileNotFoundException fnfe) {
+			notice = "File not found";
+			notifyViews();
+		} catch (Exception ex) {
+			notice = "There was a problem reading the event file";
+			notifyViews();
+		}
+
+		return response;
+	}
 }
