@@ -7,8 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import controllers.EventListController;
-import core.Model;
-import core.View;
+import controllers.core.Model;
+import controllers.core.View;
 
 
 /**

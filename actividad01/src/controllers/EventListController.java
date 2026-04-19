@@ -4,7 +4,7 @@ import java.util.Vector;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import core.Controller;
+import controllers.core.Controller;
 import models.SchedulerIO;
 import views.EventListView;
 

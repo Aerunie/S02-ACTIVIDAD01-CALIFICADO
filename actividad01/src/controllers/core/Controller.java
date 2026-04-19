@@ -1,4 +1,4 @@
-package core;
+package controllers.core;
 
 import java.awt.CardLayout;
 import java.awt.Component;

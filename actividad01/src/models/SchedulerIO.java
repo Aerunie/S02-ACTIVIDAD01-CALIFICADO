@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import core.Model;
-import core.View;
+import controllers.core.Model;
+import controllers.core.View;
 
 
 /**

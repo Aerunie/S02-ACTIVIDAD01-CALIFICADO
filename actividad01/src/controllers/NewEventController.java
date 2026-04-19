@@ -2,7 +2,7 @@ package controllers;
 
 import javax.swing.JOptionPane;
 
-import core.Controller;
+import controllers.core.Controller;
 import models.SchedulerEvent;
 import models.SchedulerIO;
 import views.EventListView;

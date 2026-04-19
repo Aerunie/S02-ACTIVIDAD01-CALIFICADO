@@ -8,8 +8,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
 import controllers.HomeController;
-import core.Model;
-import core.View;
+import controllers.core.Model;
+import controllers.core.View;
 
 
 /**

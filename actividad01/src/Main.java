@@ -1,4 +1,4 @@
-import core.Controller;
+import controllers.core.Controller;
 import controllers.HomeController;
 
 

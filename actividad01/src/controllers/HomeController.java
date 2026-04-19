@@ -1,6 +1,6 @@
 package controllers;
 
-import core.Controller;
+import controllers.core.Controller;
 import views.EventListView;
 import views.HomeView;
 import views.NewEventView;

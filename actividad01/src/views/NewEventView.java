@@ -17,8 +17,8 @@ import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 
 import controllers.NewEventController;
-import core.Model;
-import core.View;
+import controllers.core.Model;
+import controllers.core.View;
 import models.Frequency;
 import models.SchedulerEvent;
 import models.SchedulerUtil;
