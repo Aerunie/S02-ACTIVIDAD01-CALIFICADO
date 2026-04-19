@@ -88,6 +88,8 @@ public class RemoveEventController extends Controller
 			SchedulerIO schedulerIO = new SchedulerIO();
 			schedulerIO.attach(removeEventView);
 			schedulerIO.syncEvents(events);
+
+			JOptionPane.showMessageDialog(null, "Evento eliminado", "INFORMACIÓN", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "ERROR", e.getMessage(), JOptionPane.ERROR_MESSAGE);
 		}

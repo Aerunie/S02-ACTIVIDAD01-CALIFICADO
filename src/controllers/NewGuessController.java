@@ -1,9 +1,8 @@
 package controllers;
 
 import controllers.core.Controller;
-import models.SchedulerEvent;
-import models.SchedulerIO;
-import views.EventListView;
+import models.Guess;
+import models.GuessIO;
 import views.NewGuessView;
 
 import javax.swing.*;
@@ -38,24 +37,15 @@ public class NewGuessController extends Controller
 		newGuessView = new NewGuessView(this);
 	}
 	
-	/**
-	 * Creates a new {@link SchedulerEvent} and puts it on {@link EventListView}.
-	 * 
-	 * @param event Event to be added
-	 */
-	public void addEvent(SchedulerEvent event)
+	public void addGuess(Guess guess)
 	{
-		Object[] metadata = new Object[5];
-		metadata[0] = event.getDate();
-		metadata[1] = event.getEventDesc();
-		metadata[2] = event.getFrequency();
-		metadata[3] = event.getFwdEmail();
-		metadata[4] = event.getAlarm() ? "ON" : "OFF";
-
 		try {
-			SchedulerIO schedulerIO = new SchedulerIO();
-			schedulerIO.attach(newGuessView);
-			schedulerIO.saveEvent(event);
+			GuessIO guessIO = new GuessIO();
+			guessIO.attach(newGuessView);
+			guessIO.saveGuess(guess);
+
+			JOptionPane.showMessageDialog(null, "Invitado registrado", "INFORMACIÓN", JOptionPane.INFORMATION_MESSAGE);
+
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "ERROR", e.getMessage(), JOptionPane.ERROR_MESSAGE);
 		}

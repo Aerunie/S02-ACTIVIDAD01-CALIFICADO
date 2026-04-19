@@ -1,0 +1,318 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam linetype ortho
+
+title Diagrama de clases - Actividad 01
+
+package "controllers.core" {
+    abstract class Controller {
+        # {static} mainFrame : JFrame
+        - {static} viewsViewer : JPanel
+        - {static} mainFrameComponents : Map<String, Component>
+
+        {abstract} + run() : void
+        + {static} addView(viewName : String, view : View) : void
+        + {static} loadView(viewName : String) : void
+        + {static} addComponent(name : String, component : Component) : void
+        + {static} removeComponent(name : String) : void
+        + {static} getComponent(name : String) : Component
+    }
+
+    interface Model {
+        + attach(view : View) : void
+        + detach(view : View) : void
+        + notifyViews() : void
+    }
+
+    interface View {
+        + update(model : Model, data : Object) : void
+    }
+}
+
+package "controllers" {
+    class HomeController {
+        - homeView : HomeView
+        - eventListController : EventListController
+        - removeEventController : RemoveEventController
+        - newEventController : NewEventController
+        - newGuessController : NewGuessController
+
+        + run() : void
+        + getEventListView() : EventListView
+        + getNewEventView() : NewEventView
+        + getRemoveEventView() : RemoveEventView
+        + getNewGuessView() : NewGuessView
+    }
+
+    class EventListController {
+        - eventListView : EventListView
+        - table : JTable
+
+        + run() : void
+        + addNewRow(values : Object[]) : void
+        + listEvents() : void
+        + getView() : EventListView
+        + getNameColumns() : Vector<String>
+        + getDataColumns() : Vector<Vector<Object>>
+    }
+
+    class NewEventController {
+        - newEventView : NewEventView
+        - eventListController : EventListController
+        - removeEventController : RemoveEventController
+
+        + NewEventController(eventListController : EventListController, removeEventController : RemoveEventController)
+        + run() : void
+        + addEvent(event : SchedulerEvent) : void
+        + getView() : NewEventView
+    }
+
+    class RemoveEventController {
+        - removeEventView : RemoveEventView
+        - table : JTable
+        - eventListController : EventListController
+
+        + RemoveEventController(eventListController : EventListController)
+        + run() : void
+        + listEvents() : void
+        + cancel() : void
+        + removeEvent() : void
+        + selectAll() : void
+        + getView() : RemoveEventView
+        + getNameColumns() : Vector<String>
+        + getDataColumns() : Vector<Vector<Object>>
+        - customModelTable(data : Vector<Vector<Object>>, columns : Vector<String>) : JTable
+    }
+
+    class NewGuessController {
+        - newGuessView : NewGuessView
+
+        + NewGuessController()
+        + run() : void
+        + addGuess(guess : Guess) : void
+        + getView() : NewGuessView
+    }
+}
+
+package "models" {
+    enum Frequency {
+        DAILY
+        WEEKLY
+        MONTHLY
+    }
+
+    enum Genre {
+        MALE
+        FEMALE
+    }
+
+    class SchedulerEvent {
+        - eventDesc : String
+        - fwdEmail : String
+        - date : Date
+        - frequency : Frequency
+        - alarm : boolean
+
+        + toString() : String
+        + getters()
+        + setters()
+    }
+
+    class Guess {
+        - name : String
+        - celular : String
+        - genre : Genre
+        - date : Date
+        - direction : String
+        - terminos : boolean
+
+        + getters()
+        + setters()
+        + toString() : String
+    }
+
+    class SchedulerIO {
+        - {static} DIRECTORY : String
+        - {static} FILE : String
+        - views : List<View>
+        - notice : String
+
+        + attach(view : View) : void
+        + detach(view : View) : void
+        + notifyViews() : void
+        + saveEvent(event : SchedulerEvent) : void
+        + syncEvents(events : List<SchedulerEvent>) : void
+        + getEvents() : Vector<Vector<Object>>
+        + getEventsForRemove() : Vector<Vector<Object>>
+    }
+
+    class GuessIO {
+        - {static} DIRECTORY : String
+        - {static} FILE : String
+        - views : List<View>
+        - notice : String
+
+        + attach(view : View) : void
+        + detach(view : View) : void
+        + notifyViews() : void
+        + saveGuess(guess : Guess) : void
+    }
+
+    class SchedulerUtil {
+        + {static} getDateFromString(dateStr : String) : Date
+    }
+}
+
+package "views" {
+    class HomeView {
+        - homeController : HomeController
+        - mainFrame : JFrame
+        - {static} MAIN_FRAME_WIDTH : int
+        - {static} MAIN_FRAME_HEIGHT : int
+        - {static} MAIN_FRAME_X : int
+        - {static} MAIN_FRAME_Y : int
+
+        + HomeView(homeController : HomeController, mainFrame : JFrame)
+        + update(model : Model, data : Object) : void
+        - make_mainFrame() : void
+        - make_tabs() : void
+    }
+
+    class EventListView {
+        - eventListController : EventListController
+        - table : JTable
+
+        + EventListView(eventListController : EventListController, table : JTable)
+        + update(model : Model, data : Object) : void
+        - make_frame() : void
+    }
+
+    class NewEventView {
+        - newEventController : NewEventController
+        - tf_eventDesc : JTextField
+        - tf_forwardEmail : JTextField
+        - tf_date : JFormattedTextField
+        - cbx_alarm : JCheckBox
+        - rbtn_monthly : JRadioButton
+        - rbtn_weekly : JRadioButton
+        - rbtn_daily : JRadioButton
+
+        + NewEventView(newEventController : NewEventController)
+        + update(model : Model, data : Object) : void
+        - cleanFields() : void
+        - make_frame() : void
+        - make_field_eventDesc() : void
+        - make_field_fwdEmail() : void
+        - make_field_date() : void
+        - make_field_frequency() : void
+        - make_field_alarm() : void
+        - make_btn_save() : void
+        - make_btn_clean() : void
+    }
+
+    class RemoveEventView {
+        - removeEventController : RemoveEventController
+        - table : JTable
+
+        + RemoveEventView(removeEventController : RemoveEventController, table : JTable)
+        + update(model : Model, data : Object) : void
+        - make_frame() : void
+        - make_btn_cancel() : void
+        - make_btn_remove() : void
+        - make_btn_select_all() : void
+    }
+
+    class NewGuessView {
+        - newGuessController : NewGuessController
+        - tf_guess_nombre : JTextField
+        - tf_guess_celular : JTextField
+        - tf_guess_direccion : JTextField
+        - tf_date : JFormattedTextField
+        - cbx_terminos : JCheckBox
+        - rbtn_femenino : JRadioButton
+        - rbtn_masculino : JRadioButton
+
+        + NewGuessView(newGuessController : NewGuessController)
+        + update(model : Model, data : Object) : void
+        - cleanFields() : void
+        - make_frame() : void
+        - make_field_guess_nombre() : void
+        - make_field_guess_celular() : void
+        - make_field_guess_direccion() : void
+        - make_field_date() : void
+        - make_field_guess_genero() : void
+        - make_field_terminos() : void
+        - make_btn_save() : void
+        - make_btn_clean() : void
+    }
+}
+
+class Main {
+    + {static} main(args : String[]) : void
+}
+
+Controller <|-- HomeController
+Controller <|-- EventListController
+Controller <|-- NewEventController
+Controller <|-- RemoveEventController
+Controller <|-- NewGuessController
+
+Model <|.. SchedulerIO
+Model <|.. GuessIO
+
+View <|.. HomeView
+View <|.. EventListView
+View <|.. NewEventView
+View <|.. RemoveEventView
+View <|.. NewGuessView
+
+Main --> HomeController
+
+HomeController *-- HomeView
+HomeController *-- EventListController
+HomeController *-- RemoveEventController
+HomeController *-- NewEventController
+HomeController *-- NewGuessController
+
+EventListController --> EventListView
+EventListController --> SchedulerIO
+
+NewEventController --> NewEventView
+NewEventController --> EventListController
+NewEventController --> RemoveEventController
+NewEventController --> SchedulerEvent
+NewEventController --> SchedulerIO
+
+RemoveEventController --> RemoveEventView
+RemoveEventController --> EventListController
+RemoveEventController --> SchedulerIO
+RemoveEventController --> SchedulerEvent
+RemoveEventController --> SchedulerUtil
+RemoveEventController --> Frequency
+
+NewGuessController --> NewGuessView
+NewGuessController --> Guess
+NewGuessController --> GuessIO
+
+SchedulerEvent --> Frequency
+Guess --> Genre
+
+SchedulerIO ..> View
+GuessIO ..> View
+
+HomeView --> HomeController
+EventListView --> EventListController
+NewEventView --> NewEventController
+RemoveEventView --> RemoveEventController
+NewGuessView --> NewGuessController
+
+NewEventView --> SchedulerEvent
+NewEventView --> SchedulerUtil
+NewEventView --> Frequency
+
+NewGuessView --> Guess
+NewGuessView --> SchedulerUtil
+NewGuessView --> Genre
+
+@enduml

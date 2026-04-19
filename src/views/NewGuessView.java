@@ -3,9 +3,7 @@ package views;
 import controllers.NewGuessController;
 import controllers.core.Model;
 import controllers.core.View;
-import models.Frequency;
-import models.SchedulerEvent;
-import models.SchedulerUtil;
+import models.*;
 
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
@@ -211,22 +209,21 @@ public class NewGuessView extends JPanel implements View
 		btn_save.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				SchedulerEvent event = new SchedulerEvent();
+				Guess guess = new Guess();
 				
-				event.setDate(SchedulerUtil.getDateFromString(tf_date.getText()));
-				event.setEventDesc(tf_guess_nombre.getText());
-				event.setAlarm(cbx_terminos.isSelected() ? true : false);
-				event.setFwdEmail(tf_guess_celular.getText());
+				guess.setDate(SchedulerUtil.getDateFromString(tf_date.getText()));
+				guess.setName(tf_guess_nombre.getText());
+				guess.setTerminos(cbx_terminos.isSelected());
+				guess.setCelular(tf_guess_celular.getText());
+				guess.setDirection(tf_guess_direccion.getText());
 				
 				if (rbtn_masculino.isSelected()) {
-					event.setFrequency(Frequency.DAILY);
+					guess.setGenre(Genre.MALE);
 				} else if (rbtn_femenino.isSelected()) {
-					event.setFrequency(Frequency.WEEKLY);
-				} else {
-					event.setFrequency(Frequency.MONTHLY);
+					guess.setGenre(Genre.FEMALE);
 				}
 				
-				newGuessController.addEvent(event);
+				newGuessController.addGuess(guess);
 				cleanFields();
 			}
 		});
