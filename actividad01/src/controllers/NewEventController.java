@@ -19,6 +19,7 @@ public class NewEventController extends Controller
 	//-----------------------------------------------------------------------
 	private NewEventView newEventView;
 	private EventListController eventListController;
+	private RemoveEventController removeEventController;
 
 	
 	//-----------------------------------------------------------------------
@@ -30,9 +31,10 @@ public class NewEventController extends Controller
 	 * @param eventListController {@link EventListController}, because it will 
 	 * add new events created in {@link NewEventView}.
 	 */
-	public NewEventController(EventListController eventListController) 
+	public NewEventController(EventListController eventListController, RemoveEventController removeEventController)
 	{
 		this.eventListController = eventListController;
+		this.removeEventController = removeEventController;
 		
 	}
 	
@@ -70,6 +72,7 @@ public class NewEventController extends Controller
 		
 		
 		eventListController.addNewRow(metadata);
+		removeEventController.listEvents();
 	}
 	
 	

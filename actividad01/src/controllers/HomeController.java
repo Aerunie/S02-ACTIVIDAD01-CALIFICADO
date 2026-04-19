@@ -17,8 +17,9 @@ public class HomeController extends Controller
 	//-----------------------------------------------------------------------
 	private HomeView homeView;
 	private EventListController eventListController = new EventListController();
-	private NewEventController newEventController = new NewEventController(eventListController);
-	private RemoveEventController removeEventController = new RemoveEventController();
+	private RemoveEventController removeEventController = new RemoveEventController(eventListController);
+	private NewEventController newEventController = new NewEventController(eventListController, removeEventController);
+
 	
 	
 	//-----------------------------------------------------------------------

@@ -1,11 +1,16 @@
 package controllers;
 
 import controllers.core.Controller;
+import models.Frequency;
+import models.SchedulerEvent;
 import models.SchedulerIO;
+import models.SchedulerUtil;
 import views.RemoveEventView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 
@@ -19,7 +24,12 @@ public class RemoveEventController extends Controller
 	//-----------------------------------------------------------------------
 	private RemoveEventView removeEventView;
 	private JTable table;
-	
+
+	private EventListController eventListController;
+
+	public RemoveEventController(EventListController eventListController){
+		this.eventListController = eventListController;
+	}
 	
 	//-----------------------------------------------------------------------
 	//		Methods
@@ -27,18 +37,71 @@ public class RemoveEventController extends Controller
 	@Override
 	public void run() 
 	{
-		table = new JTable(getDataColumns(), getNameColumns());
+		table = new JTable();
+		table = customModelTable(getDataColumns(), getNameColumns());
 		removeEventView = new RemoveEventView(this, table);
 	}
-	
-	/**
-	 * Adds a new row in a {@link JTable} with the values informed.
-	 * 
-	 * @param values Values to be add in {@link JTable}
-	 */
-	public void addNewRow(Object[] values) 
+
+	public void listEvents()
 	{
-		((DefaultTableModel) table.getModel()).addRow(values);
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		while(model.getRowCount() > 0){
+			model.removeRow(0);
+		}
+
+		for (Vector<Object> row : getDataColumns()){
+			model.addRow(row);
+		}
+
+		table.setModel(model);
+
+		eventListController.listEvents();
+	}
+
+	public void cancel(){
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		for (int i = 0; i < model.getRowCount(); i++) {
+			model.setValueAt(Boolean.FALSE, i, 5);
+		}
+
+		table.setModel(model);
+	}
+
+	public void removeEvent(){
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		List<SchedulerEvent> events = new ArrayList<>();
+		for (int i = 0; i < model.getRowCount(); i++) {
+			Boolean selected = (Boolean) model.getValueAt(i, 5);
+			if(!selected){
+				SchedulerEvent event = new SchedulerEvent();
+				event.setDate(SchedulerUtil.getDateFromString(model.getValueAt(i, 0).toString()));
+				event.setEventDesc(model.getValueAt(i, 1).toString());
+				event.setFrequency((Frequency) model.getValueAt(i, 2));
+				event.setFwdEmail(model.getValueAt(i, 3).toString());
+				event.setAlarm(model.getValueAt(i, 4).toString().equals("ON"));
+
+				events.add(event);
+			}
+		}
+
+		try {
+			SchedulerIO schedulerIO = new SchedulerIO();
+			schedulerIO.attach(removeEventView);
+			schedulerIO.syncEvents(events);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "ERROR", e.getMessage(), JOptionPane.ERROR_MESSAGE);
+		}
+
+		listEvents();
+	}
+
+	public void selectAll(){
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		for (int i = 0; i < model.getRowCount(); i++) {
+			model.setValueAt(Boolean.TRUE, i, 5);
+		}
+
+		table.setModel(model);
 	}
 	
 	
@@ -91,4 +154,24 @@ public class RemoveEventController extends Controller
 
 		return dataColumns;
 	}
+
+	private JTable customModelTable(Vector<Vector<Object>> data, Vector<String> columns){
+		DefaultTableModel model = new DefaultTableModel(data, columns) {
+			@Override
+			public Class<?> getColumnClass(int columnIndex) {
+				if (columnIndex == 5) { // columna Boolean
+					return Boolean.class;
+				}
+				return String.class;
+			}
+
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return column == 5; // solo editable el checkbox
+			}
+		};
+
+		return new JTable(model);
+	}
+
 }

@@ -73,6 +73,25 @@ public class SchedulerIO implements Model
 		}
 	}
 
+	public void syncEvents(List<SchedulerEvent> events){
+		StringBuilder content = new StringBuilder();
+		for (SchedulerEvent event: events){
+			content.append(event.toString().concat("\n"));
+		}
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(DIRECTORY, FILE)));
+			writer.write(content.toString().trim());
+			writer.newLine();
+			writer.close();
+		} catch (FileNotFoundException fnfe) {
+			notice = "File not found";
+			notifyViews();
+		} catch (Exception ex) {
+			notice = "Error while writing the file";
+			notifyViews();
+		}
+	}
+
 	/**
 	 * Reads a {@link SchedulerEvent} saved in disk with name {@link #FILE}.
 	 * @return List of lists (matrix) of the events

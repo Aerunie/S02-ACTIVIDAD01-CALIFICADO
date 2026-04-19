@@ -40,6 +40,20 @@ public class EventListController extends Controller
 	{
 		((DefaultTableModel) table.getModel()).addRow(values);
 	}
+
+	public void listEvents()
+	{
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		while(model.getRowCount() > 0){
+			model.removeRow(0);
+		}
+
+		for (Vector<Object> row : getDataColumns()){
+			model.addRow(row);
+		}
+
+		table.setModel(model);
+	}
 	
 	
 	//-----------------------------------------------------------------------

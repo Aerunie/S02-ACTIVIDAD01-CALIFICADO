@@ -6,6 +6,8 @@ import controllers.core.View;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 /**
@@ -37,6 +39,9 @@ public class RemoveEventView extends JPanel implements View
 		this.table = table;
 		
 		make_frame();
+		make_btn_cancel();
+		make_btn_remove();
+		make_btn_select_all();
 	}
 	
 	
@@ -57,7 +62,53 @@ public class RemoveEventView extends JPanel implements View
 	 */
 	private void make_frame()
 	{
+		table.setPreferredScrollableViewportSize(new Dimension(450, 200));
 		JScrollPane scrollPane = new JScrollPane(table);
 		add(scrollPane, BorderLayout.CENTER);
+	}
+
+	private void make_btn_cancel()
+	{
+		// Makes button
+		JButton btn_cancel = new JButton("Cancel");
+		add(btn_cancel);
+
+		// Add action listener
+		btn_cancel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				removeEventController.cancel();
+			}
+		});
+	}
+
+	private void make_btn_remove()
+	{
+		// Makes button
+		JButton btn_cancel = new JButton("Remove");
+		add(btn_cancel);
+
+		// Add action listener
+		btn_cancel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				removeEventController.removeEvent();
+			}
+		});
+	}
+
+	private void make_btn_select_all()
+	{
+		// Makes button
+		JButton btn_cancel = new JButton("Seleccionar Todos");
+		add(btn_cancel);
+
+		// Add action listener
+		btn_cancel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				removeEventController.selectAll();
+			}
+		});
 	}
 }
